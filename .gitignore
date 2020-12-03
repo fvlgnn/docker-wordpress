@@ -1,3 +1,19 @@
+#environment
+.env
+db.init/*
+!db.init/zzz-migrate.*
+
+# WordPress
+wp/
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/.htaccess
+/index.php
+/license.txt
+/readme.html
+/xmlrpc.php
+
 # ignore everything in the root except the "wp-content" directory.
 !wp-content/
 
@@ -13,11 +29,42 @@ wp-content/plugins/hello.php
 
 # ignore specific themes
 wp-content/themes/twenty*/
+!wp-content/themes/twenty*-child/
 
-# ignore node dependency directories
+# IDE Files
+.vscode
+/nbproject/
+.idea/*
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+/tests/tests/
+/tests/results/
+
+# Other Files
+.git
 node_modules/
-
-# ignore log files and databases
+.grunt
+build/Release
+.DS_Store
+composer.lock
+package-lock.json
+*.ffs_batch
+*.ffs_gui
+archivio
+archive
+bkp
+tmp
+*.bkp
+*.log
 *.log
 *.sql
+*.gz
 *.sqlite
+
+# Executables
+*.exe
+*.out
+*.app

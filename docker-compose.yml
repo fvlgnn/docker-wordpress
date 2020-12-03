@@ -1,0 +1,58 @@
+version: "3.1"
+
+services:
+
+  wp:
+    image: wordpress:${WP_CORE_VERSION}-php${PHP_VERSION}-apache
+    container_name: ${PROJECT_NAME}_${VERSION_ID}_wp
+    ports:
+      - ${WEB_PORT_EXPOSED}:80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASS}
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_TABLE_PREFIX: ${WP_TABLE_PREFIX}
+      WORDPRESS_AUTH_KEY: ${WP_AUTH_KEY}
+      WORDPRESS_SECURE_AUTH_KEY: ${WP_SECURE_AUTH_KEY}
+      WORDPRESS_LOGGED_IN_KEY: ${WP_LOGGED_IN_KEY}
+      WORDPRESS_NONCE_KEY: ${WP_NONCE_KEY}
+      WORDPRESS_AUTH_SALT: ${WP_AUTH_SALT}
+      WORDPRESS_SECURE_AUTH_SALT: ${WP_SECURE_AUTH_SALT}
+      WORDPRESS_LOGGED_IN_SALT: ${WP_LOGGED_IN_SALT}
+      WORDPRESS_NONCE_SALT: ${WP_NONCE_SALT}
+      WORDPRESS_DEBUG: 1
+    volumes:
+      # - wp:/var/www/html # use docker volumes
+      - ./wp:/var/www/html # use local path
+      - ./wp-content:/var/www/html/wp-content
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.3
+    container_name: ${PROJECT_NAME}_${VERSION_ID}_db
+    ports:
+      - ${DB_PORT_EXPOSED}:3306
+    volumes:
+      - db:/var/lib/mysql # use docker volumes
+      # - ./db:/var/lib/mysql # use local path ! DANGEROUS !
+      - ./db.init:/docker-entrypoint-initdb.d
+      - ./db.backup:/backup
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOTPASS}
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+
+  mailhog:
+    image: mailhog/mailhog
+    ports: 
+      - 1025:1025 # smtp server port
+      - 8025:8025 # web ui port
+
+volumes:
+
+  # wp: # uncomment if you want use wp docker volumes
+  db:
