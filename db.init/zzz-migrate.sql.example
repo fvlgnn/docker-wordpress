@@ -1,11 +1,11 @@
 USE `wordpress`;
 
-UPDATE `wpskills_options` SET `option_value` = replace(`option_value`, 'https://prod.url.net', 'http://dev.url.net') WHERE `option_name` = 'home' OR `option_name` = 'siteurl';
+UPDATE `wp_options` SET `option_value` = replace(`option_value`, 'https://prod.url.net', 'http://dev.url.net') WHERE `option_name` = 'home' OR `option_name` = 'siteurl';
 
-UPDATE `wpskills_posts` SET `guid` = replace(`guid`, 'https://prod.url.net','http://dev.url.net');
+UPDATE `wp_posts` SET `guid` = replace(`guid`, 'https://prod.url.net','http://dev.url.net');
 
-UPDATE `wpskills_posts` SET `post_content` = replace(`post_content`, 'https://prod.url.net', 'http://dev.url.net');
+UPDATE `wp_posts` SET `post_content` = replace(`post_content`, 'https://prod.url.net', 'http://dev.url.net');
 
-UPDATE `wpskills_postmeta` SET `meta_value` = replace(`meta_value`,'https://prod.url.net','http://dev.url.net');
+UPDATE `wp_postmeta` SET `meta_value` = replace(`meta_value`,'https://prod.url.net','http://dev.url.net');
 
-UPDATE `wpskills_options` SET `option_value` = replace(`option_value`,'email@prod.net','email@dev.net') WHERE `option_name` = 'admin_email';
+UPDATE `wp_options` SET `option_value` = replace(`option_value`,'email@prod.net','email@dev.net') WHERE `option_name` = 'admin_email';
