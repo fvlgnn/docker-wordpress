@@ -15,8 +15,8 @@ services:
       WORDPRESS_TABLE_PREFIX: ${WP_TABLE_PREFIX}
       WORDPRESS_DEBUG: 1
     volumes:
-      # - wp:/var/www/html # use docker volumes
-      - ./wp:/var/www/html # use local path
+      - wp:/var/www/html # use docker volumes (view volumes below)
+      # - ./wp:/var/www/html # use local path (view volumes below)
       - ./wp-content:/var/www/html/wp-content
     depends_on:
       - db
@@ -27,8 +27,7 @@ services:
     ports:
       - ${DB_PORT_EXPOSED}:3306
     volumes:
-      - db:/var/lib/mysql # use docker volumes
-      # - ./db:/var/lib/mysql # use local path ! DANGEROUS !
+      - db:/var/lib/mysql
       - ./db.init:/docker-entrypoint-initdb.d
       - ./db.backup:/backup
     environment:
@@ -45,6 +44,5 @@ services:
       - 8025:8025 # web ui port
 
 volumes:
-
-  # wp: # uncomment if you want use wp docker volumes
+  wp: # comment or local path or uncomment if you want use wp docker volumes 
   db:
