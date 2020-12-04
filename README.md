@@ -8,21 +8,21 @@ Docker environment stack for Wordpress with PHP-apache, MariaDB and MailHog for 
 Richiesto **docker-compose** 
 
 
-### Composizione dello Stack
+## Composizione dello Stack
 
 * Wordpress - PHP-apache _(WEB)_
 * MariaDB _(DB)_
 * MailHog _(SMTP-TEST)_
 
 
-### Immagini Docker
+## Immagini Docker
 
 * wordpress:${WP_CORE_VERSION}-php${PHP_VERSION}-apache
 * mariadb:10.3
 * mailhog/mailhog
 
 
-### Riferimenti
+## Riferimenti
 
 * https://hub.docker.com/_/wordpress
 * https://hub.docker.com/_/mariadb
@@ -30,7 +30,7 @@ Richiesto **docker-compose**
 * https://hub.docker.com/_/php
 
 
-### Alberatura di Progetto
+## Alberatura di Progetto
 
 ```
 docker-wordpress
@@ -60,15 +60,15 @@ docker-wordpress
 ```
 
 
-### Variabili d'Ambiente
+## Variabili d'Ambiente
 
-#### File delle variabili: `.env`
+### File delle variabili: `.env`
 
 _Il file `.env` è fondamentale! Utilizzare `.env.example` come template._
 
 **Rinomina `.env.example` come `.env` o crea una copia rinominandolo `.env`**
 
-##### Variable description
+#### Variable description
 
 * `PROJECT_NAME`: Nome assegnato allo stack docker.
 * `VERSION_ID`: ID del progetto. (Da usare se si prevedono più versioni dello stack o del progetto).
@@ -83,14 +83,14 @@ _Il file `.env` è fondamentale! Utilizzare `.env.example` come template._
 * `WP_TABLE_PREFIX`: Prefisso delle tabelle sul database utilizzato da wordpress.
 
 
-## Suggerimenti
-**Cose di cui dovresti essere informato**
-
-
 ---
 
 
-### Ambiente
+# Suggerimenti
+**Cose di cui dovresti essere informato**
+
+
+## Ambiente
 
 Verifica in prima istanza il file `.env` se non esiste prendi spunto dal file `.env.example`
 
@@ -102,14 +102,11 @@ Il repository così configurato (vedi bene il `.gitignore`) potrebbe essere eseg
 Se devi lavorare su una versione già esistente del sito WP ed hai a disposizione il dump del [database](#Database) e i sorgenti [wordpress](#Wordpress) del sito, aggiungi il dump (`.sql` o `.gz`) dentro la cartella `db.init` e l'intera cartella `wp-contents` nella root di progetto (la cartella dove stai leggendo questo `README.md`) ed esegui il comando di build di [Docker](#Docker), ma prima cancella i volumi già esistenti del tuo stack altrimenti non verranno apportate modifiche al tuo ambiente.
 
 
----
-
-
-### Wordpress
+## Wordpress
 
 Dopo la build, wordpress girerà all'interno di un container ad eccezione della cartella `wp-contents` che sarà disponibile nella cartella principale di progetto.
 
-#### Informazioni per utenti esperti
+### Informazioni per utenti esperti
 Il file `wp-config.php` viene editato con i parametri indicati nel file delle variabili d'ambiente `.env`. Qualora fosse necessario apportare modifiche a tale file questo può avvenire accedendo direttamente all'interno del container Docker tramite il comando `docker-compose exec wp bash` e una volta dentro il container con bash ci troviamo in un ambiente linux ma con molti ma molti meno applicativi e comandi a disposizione, ovvero non sono presenti editor testuali (`nano`, `vi`, `pico`, ecc.) ma è presente il comando `sed`. In culo alla balena!
 Se avere a disposizione il core è fondamentale, nel _docker-compose_, dobbiamo indicare come _volume_ di Wordpress un _percorso localmente raggiungibile_ anziché un _volume docker_ (righe 18,19 e 47 del file `docker-compose.yml`). Usando un _percorso localmente raggiungibile_ dopo la build sarà presente la cartella `wp` nella cartella principale di progetto. Qui potrà essere editato il file `wp-config.php` e potranno essere eseguiti anche update del core sovrascrivendo `wp-admin` e `wp-includes`. NB la `wp-contents` usata dallo stack sarà sempre quella presente nella cartella principale di progetto e non quella dentro `wp`. Comunque se non hai capito quello che è scritto o cosa siano i _volumi di docker_ forse è il caso che lasci il `docker-compose.yml` così comè e ti fidi di Docker e dei manutentori di Wordpress del Docker Hub.
 
@@ -125,21 +122,18 @@ define('WP_DEBUG_DISPLAY', true);
 ```
 
 
----
-
-
-### Database
+## Database
 
 Per il database viene utilizzato un container MariaBD, nulla vieta di usare un container MySQL. I sorgenti dei databases risiedono in un _volume docker_. Salvare questi sorgenti su un percorso localmente raggiungibile potrebbe compromettere la build sopratutto se vengono utilizzate alcune versioni di MariaDB o MySQL.
 
 
-#### Importazione in caso di migrazione
+### Importazione in caso di migrazione
 
 Qualora avessimo a disposizione il dump di un database da utilizzare il file può essere aggiunto dentro la cartella `db.init` che è una _mappatura_ della cartella MySQL `entrypoint-initdb.d` per i più avvezzi a MySQL Server. I file `.sql` o `.gz` presenti all'interno di questa cartella vengono eseguiti alla prima inizializzazione del server, nel nostro caso una _build_. Qui possono essere inseriti dump o file con all'interno query SQL. I file vengono eseguiti in ordine alfa-numerico crescente.
 Es. abbiamo un dump di un sito in produzione che vogliamo importare sull'ambiente di sviluppo docker e dobbiamo modificare gli URL del sito, dei puntamenti ai contenuti e l'email di admin. Quindi caricherò il file dump.sql dentro la cartella e modifico il file `zzz-migrate.sql` dove al suo interno sono presenti alcune query da usare come esempi per svolgere le operazioni sopra descritte.
 
 
-#### Backup e Restore
+### Backup e Restore
 
 Per effettuare i backup e restore del database è stata mappata una cartella `db.backup` presente nella cartella principale di progetto.
 
@@ -150,26 +144,35 @@ I backup si effettuano accedendo nella _bash_ del container _db_.
 Al suo interno ci troviamo in un ambiente linux dove è possibile eseguire comandi mysql.
 
 
-##### Backup
+#### Backup
 
-**Dump in SQL:** `mysqldump --force --opt -uroot -ppassword --databases wordpress > /backup/wordpress-$(date +%U).sql`
-**Dump in GZ:** `mysqldump --force --opt -uroot -ppassword --databases wordpress | gzip > /backup/wordpress-$(date +%U).sql.gz`
+##### Dump in SQL
+`mysqldump --force --opt -uroot -ppassword --databases wordpress > /backup/wordpress-$(date +%U).sql`
+
+##### Dump in GZ
+`mysqldump --force --opt -uroot -ppassword --databases wordpress | gzip > /backup/wordpress-$(date +%U).sql.gz`
 
 
-##### Restore
+#### Restore
 
-**Aggiorna DB da SQL**: `mysql -uroot -ppassword wordpress < /backup/wordpress-#.sql`
-**Nuovo DB da SQL**: `mysql -uroot -ppassword < /backup/wordpress-#.sql`
+##### Aggiorna DB da SQL
+`mysql -uroot -ppassword wordpress < /backup/wordpress-#.sql`
 
-**Aggiorna DB da GZ**: `gunzip < /backup/wordpress-#.sql | mysql -uroot -ppassword wordpress`
-**Nuovo DB da GZ**: `gunzip < /backup/wordpress-#.sql | mysql -uroot -ppassword`
+##### Nuovo DB da SQL
+`mysql -uroot -ppassword < /backup/wordpress-#.sql`
 
-##### Per ripristino
+##### Aggiorna DB da GZ
+`gunzip < /backup/wordpress-#.sql | mysql -uroot -ppassword wordpress`
+
+##### Nuovo DB da GZ
+`gunzip < /backup/wordpress-#.sql | mysql -uroot -ppassword`
+
+#### Per ripristino
 
 Fai un down dello stack e cancella il volume attuale del DB (vedi comandi [docker](#Docker)), inserisci uno dei backup (`.sql` o `.gz`) all'interno di `db-init` ed esegui nuovamente `docker-compose build -d`
 
 
-#### Connessione con client esterno
+### Connessione con client esterno
 
 Per connettersi tramite client MySQL esterno (HeidiSQL_, _MySQL Workbench_, ecc.) i parametri da aggiungere sono i seguenti.
 
@@ -182,10 +185,7 @@ Per connettersi tramite client MySQL esterno (HeidiSQL_, _MySQL Workbench_, ecc.
 * _username_: `root` (in alternativa la variabile d'ambiente `DB_USER`)
 
 
----
-
-
-### MailHog
+## MailHog
 
 In questo stack è stato aggiunto MailHog che è un sistema di sviluppo semplice e poco invasivo per testare l'invio email.
 
@@ -198,10 +198,7 @@ I parametri di configurazione SMTP sono:
 Per controllare le email inviate (compresi MIME, Formati, ecc.) dal browser vai su http://localhost:8025
 
 
----
-
-
-### Docker
+## Docker
 
 Comandi docker in pillole.
 
