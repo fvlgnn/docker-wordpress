@@ -102,17 +102,17 @@ Questa è una procedura opzionale ma fortemente consigliata se è previsto, term
 
 Il repository così configurato (vedi bene il `.gitignore`) potrebbe essere eseguito, per il deploy, direttamente sul webserver (testing, pre-produzione, debug, produzione, ecc.) tramite **git**  senza dover utilizzare FTP/SCP/SSH.
 
-Se devi lavorare su una versione già esistente del sito WP ed hai a disposizione il dump del [database](#Database) e i sorgenti [wordpress](#Wordpress) del sito, aggiungi il dump (`.sql` o `.gz`) dentro la cartella `db.init` e l'intera cartella `wp-contents` nella cartella principale di progetto ed esegui il comando di build di [Docker](#Docker), ma prima cancella, se già presenti, i volumi già esistenti del tuo stack altrimenti non verranno apportate modifiche al tuo ambiente.
+Se devi lavorare su una versione già esistente del sito WP ed hai a disposizione il dump del [database](#Database) e i sorgenti [wordpress](#Wordpress) del sito, aggiungi il dump (`.sql` o `.gz`) dentro la cartella `db.init` e l'intera cartella `wp-content` nella cartella principale di progetto ed esegui il comando di build di [Docker](#Docker), ma prima cancella, se già presenti, i volumi già esistenti del tuo stack altrimenti non verranno apportate modifiche al tuo ambiente.
 
 
 ## Wordpress
 
-Dopo la build, Wordpress e il server web gireranno all'interno di un container ad eccezione della cartella `wp-contents` che sarà disponibile nella cartella principale di progetto.
+Dopo la build, Wordpress e il server web gireranno all'interno di un container ad eccezione della cartella `wp-content` che sarà disponibile nella cartella principale di progetto.
 
 ### Informazioni per utenti esperti
 
 Il file `wp-config.php` viene editato con i parametri indicati nel file delle variabili d'ambiente `.env`. Qualora fosse necessario apportare modifiche a tale file questo può avvenire accedendo direttamente all'interno del container Docker tramite il comando `docker-compose exec wp bash` e una volta dentro il container con bash ci troviamo in un ambiente linux ma con molti ma molti meno applicativi e comandi a disposizione, ovvero non sono presenti editor testuali (`nano`, `vi`, `pico`, ecc.) ma è presente il comando `sed` _(buona fortuna e in culo alla balena!)_
-Se avere a disposizione i sorgenti del core WP è fondamentale, nel `docker-compose.yml`, dobbiamo indicare come `volume` di Wordpress un _percorso localmente raggiungibile_ anziché un _volume docker_ (righe 18,19 e 47 del file). Usando un _percorso localmente raggiungibile_ dopo la build sarà presente la cartella `wp` nella cartella principale di progetto. Qui potrà essere editato il file `wp-config.php` e potranno essere eseguiti operazioni tramite il proprio file manager su `wp-admin` e `wp-includes`. NB la `wp-contents` usata dallo stack sarà sempre quella presente nella cartella principale di progetto e non quella dentro `wp`. 
+Se avere a disposizione i sorgenti del core WP è fondamentale, nel `docker-compose.yml`, dobbiamo indicare come `volume` di Wordpress un _percorso localmente raggiungibile_ anziché un _volume docker_ (righe 18,19 e 47 del file). Usando un _percorso localmente raggiungibile_ dopo la build sarà presente la cartella `wp` nella cartella principale di progetto. Qui potrà essere editato il file `wp-config.php` e potranno essere eseguiti operazioni tramite il proprio file manager su `wp-admin` e `wp-includes`. NB la `wp-content` usata dallo stack sarà sempre quella presente nella cartella principale di progetto e non quella dentro `wp`. 
 
 Una lista di variabili d'ambiente da utilizzare è disponibile nel [Docker Hub Wordpress](https://hub.docker.com/_/wordpress). Queste variabili vanno aggiunte al file `docker-compose.yml` prima di una build. 
 
