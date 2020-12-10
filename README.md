@@ -47,12 +47,6 @@ docker-wordpress
 ├───db.init
 │   └───zzz-migrate.sql.example
 │
-├───wp
-│   ├───wp-admin
-│   ├───wp-includes
-│   ├───wp-content (empty)
-│   └───wp-*.php
-│
 └───wp-content
     ├───mu-plugins
     ├───plugins
