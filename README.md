@@ -164,10 +164,10 @@ Al suo interno ci troviamo in un ambiente linux dove è possibile eseguire coman
 `mysql -uroot -ppassword < /backup/wordpress-#.sql`
 
 ##### Aggiorna DB da GZ
-`gunzip < /backup/wordpress-#.sql | mysql -uroot -ppassword wordpress`
+`gunzip < /backup/wordpress-#.sql.gz | mysql -uroot -ppassword wordpress`
 
 ##### Nuovo DB da GZ
-`gunzip < /backup/wordpress-#.sql | mysql -uroot -ppassword`
+`gunzip < /backup/wordpress-#.sql.gz | mysql -uroot -ppassword`
 
 #### Per ripristino
 
